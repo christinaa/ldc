@@ -23,6 +23,9 @@ bool FlagParser::parse(cl::Option &O, llvm::StringRef ArgName, llvm::StringRef A
     // (and avoid repeated conversion)
     llvm::StringRef argname = ArgName;
 
+   // std::string Name = O.ArgStr;
+    std::cout << "I am parsing " << ArgName.str() << std::endl;
+
     typedef std::vector<std::pair<std::string, bool> >::iterator It;
     for (It I = switches.begin(), E = switches.end(); I != E; ++I) {
         llvm::StringRef name = I->first;
@@ -45,6 +48,7 @@ bool FlagParser::parse(cl::Option &O, llvm::StringRef ArgName, llvm::StringRef A
 void FlagParser::getExtraOptionNames(llvm::SmallVectorImpl<const char*> &Names) {
     typedef std::vector<std::pair<std::string, bool> >::iterator It;
     for (It I = switches.begin() + 1, E = switches.end(); I != E; ++I) {
+        std::cout << "3ArgStr: " << I->first << std::endl;
         Names.push_back(I->first.data());
     }
 }

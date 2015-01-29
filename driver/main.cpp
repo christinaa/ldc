@@ -190,8 +190,8 @@ static void hide(llvm::StringMap<cl::Option *>& map, const char* name) {
 /// Removes command line options exposed from within LLVM that are unlikely
 /// to be useful for end users from the -help output.
 static void hideLLVMOptions() {
-    llvm::StringMap<cl::Option *> map;
-    cl::getRegisteredOptions(map);
+    llvm::StringMap<cl::Option*>& map = cl::getRegisteredOptions();
+
     hide(map, "bounds-checking-single-trap");
     hide(map, "disable-debug-info-verifier");
     hide(map, "disable-spill-fusing");
@@ -1014,7 +1014,9 @@ int main(int argc, char **argv)
         global.params.is64bit      = triple.isArch64Bit();
     }
 
-#if LDC_LLVM_VER >= 306
+#if LDC_LLVM_VER >= 307
+    gDataLayout = gTargetMachine->getDataLayout();
+#elif LDC_LLVM_VER >= 306
     gDataLayout = gTargetMachine->getSubtargetImpl()->getDataLayout();
 #elif LDC_LLVM_VER >= 302
     gDataLayout = gTargetMachine->getDataLayout();

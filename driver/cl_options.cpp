@@ -333,10 +333,10 @@ public:
         boundsCheck = (val ? BC_On : BC_Off);
     }
 };
-
+#if 0
 cl::opt<BoundsChecksAdapter, false, FlagParser> boundsChecksOld("boundscheck",
     cl::desc("(*) Enable array bounds check (deprecated, use -boundscheck=on|off)"));
-
+#endif
 cl::opt<BoundsCheck, true> boundsChecksNew("boundscheck",
     cl::desc("(*) Enable array bounds check"),
     cl::location(boundsCheck),

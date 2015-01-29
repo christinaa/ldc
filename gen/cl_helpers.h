@@ -17,6 +17,8 @@
 
 #include "llvm/Support/CommandLine.h"
 #include "llvm/Support/Compiler.h"
+#include "llvm/Support/Signals.h"
+#include <iostream>
 
 #if LDC_LLVM_VER < 306
 #define LLVM_END_WITH_NULL END_WITH_NULL
@@ -31,14 +33,25 @@ namespace opts {
     /// Helper class for fancier options
     class FlagParser : public cl::parser<bool> {
         std::vector<std::pair<std::string, bool> > switches;
+        cl::Option* theOpt;
+
     public:
-        template <class Opt>
-        void initialize(Opt &O) {
-            std::string Name = O.ArgStr;
+        FlagParser (cl::Option &O) : cl::parser<bool>(O) {
+            theOpt = &O;
+        }
+
+        void initialize() {
+            cl::parser<bool>::initialize();
+
+            std::string Name = theOpt->ArgStr;
+
+            //std::cout << "1ArgStr: " << Name << std::endl;
+
             switches.push_back(make_pair("enable-" + Name, true));
             switches.push_back(make_pair("disable-" + Name, false));
+
             // Replace <foo> with -enable-<foo>
-            O.ArgStr = switches[0].first.data();
+            theOpt->ArgStr = switches[0].first.data();
         }
 
         bool parse(cl::Option &O, llvm::StringRef ArgName, llvm::StringRef ArgValue, bool &Val);
